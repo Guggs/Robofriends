@@ -3,6 +3,7 @@ import Cardlist from '../components/Cardlist';
 import SearchBox from '../components/SearchBox';
 import Scroll from '../components/Scroll';
 import Robot from '../models/robot';
+import ErrorBoundry from './ErrorBoundry';
 
 interface Props {
 }
@@ -23,7 +24,6 @@ class App extends React.Component<Props, State> {
   }
 
   onSearchChange = (event: React.ChangeEvent<{value: string}>) => {
-    console.log('onSearchChange ',event.target.value);
     this.setState({searchfield: event.target.value})
 
   }
@@ -31,25 +31,23 @@ class App extends React.Component<Props, State> {
   render () {
 
     const {robots, searchfield} = this.state;
-    console.log('render');
-
     const filterRobots = robots.filter(robot => {
-      console.log(robot.name)
       return robot.name.toLowerCase().includes(searchfield.toLowerCase());
     });
     return <div className="App">
             <h1>Robo Friends</h1>
             <SearchBox searchChange={this.onSearchChange} />
             <Scroll>
-              <Cardlist robots={filterRobots}/>
+              <ErrorBoundry>
+                <Cardlist robots={filterRobots}/>
+              </ErrorBoundry>
+              
             </Scroll>
             
           </div>
   }
 
   componentDidMount () {
-    console.log('didMount');
-
     fetch('https://jsonplaceholder.typicode.com/users')
     .then(response => response.json())
     .then(users => this.setState({ robots: users}));  

@@ -6,6 +6,9 @@ interface Props {
 }
 
 const Cardlist = (props: Props) => {
+  if(false){
+    throw new Error('NOOOOO');
+  }
 
   const {robots} = props;
 
